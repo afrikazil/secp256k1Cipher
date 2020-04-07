@@ -178,15 +178,20 @@ AsymmetricKeyPair<PublicKey, PrivateKey> generateKeyPair() {
   ECPoint Q = scalar_multiple(d, keyParams.G);
   return new AsymmetricKeyPair(new ECPublicKey(Q, keyParams), new ECPrivateKey(d, keyParams));
 }
+
 //Generate new Puclic key from PrivateKey string
 PublicKey generatePublicFromPrivate(String private) {
-  var keyParams = ECCurve_secp256k1();
-  var random = FortunaRandom();
-  random.seed(KeyParameter(_seed(32)));
-  var d = BigInt.parse(private, radix: 16);
-  ECPoint Q = scalar_multiple(d, keyParams.G);
-  AsymmetricKeyPair pair = new AsymmetricKeyPair(new ECPublicKey(Q, keyParams), new ECPrivateKey(d, keyParams));
-  return pair.publicKey;
+  try {
+    var keyParams = ECCurve_secp256k1();
+    var random = FortunaRandom();
+    random.seed(KeyParameter(_seed(32)));
+    var d = BigInt.parse(private, radix: 16);
+    ECPoint Q = scalar_multiple(d, keyParams.G);
+    AsymmetricKeyPair pair = new AsymmetricKeyPair(new ECPublicKey(Q, keyParams), new ECPrivateKey(d, keyParams));
+    return pair.publicKey;
+  } catch (e) {
+    throw e;
+  }
 }
 
 Uint8List _seed(length) {
